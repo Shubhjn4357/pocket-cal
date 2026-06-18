@@ -120,26 +120,35 @@ dependencies {
   "ksp"(libs.moshi.kotlin.codegen)
 }
 
-val copyToAssets = tasks.register<Copy>("copyToAssets") {
-    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
-    into(rootProject.file("assets"))
-    rename { "pocket-cal.apk" }
-}
-
-val copyToBuildOutput = tasks.register<Copy>("copyToBuildOutput") {
-    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
-    into(rootProject.file("build-output"))
-    rename { "app-debug.apk" }
-}
-
-val copyToBuildOutputs = tasks.register<Copy>("copyToBuildOutputs") {
-    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
-    into(rootProject.file(".build-outputs"))
-    rename { "app-debug.apk" }
+val copyApkToAssets = tasks.register<Copy>("copyApkToAssets") {
+    from(layout.buildDirectory.dir("outputs/apk/debug")) {
+        include("app-debug.apk")
+        rename { "pocket-cal.apk" }
+    }
+    into(rootProject.layout.projectDirectory.dir("assets"))
+    outputs.upToDateWhen { false }
 }
 
 afterEvaluate {
-    tasks.findByName("assembleDebug")?.finalizedBy(copyToAssets, copyToBuildOutput, copyToBuildOutputs)
+    tasks.findByName("assembleDebug")?.finalizedBy(copyApkToAssets)
 }
+
+tasks.register("checkApkSize") {
+    val assetsApk = rootProject.layout.projectDirectory.file("assets/pocket-cal.apk").asFile
+    val buildOutputsApk = rootProject.layout.projectDirectory.file(".build-outputs/app-debug.apk").asFile
+    val buildOutputApk = rootProject.layout.projectDirectory.file("build-output/app-debug.apk").asFile
+    val appBuildApk = layout.buildDirectory.file("outputs/apk/debug/app-debug.apk").map { it.asFile }
+    
+    doLast {
+        val appBuildFile = appBuildApk.get()
+        println("VERIFICATION - assets/pocket-cal.apk: exists=${assetsApk.exists()}, size=${if(assetsApk.exists()) assetsApk.length() else 0}")
+        println("VERIFICATION - .build-outputs/app-debug.apk: exists=${buildOutputsApk.exists()}, size=${if(buildOutputsApk.exists()) buildOutputsApk.length() else 0}")
+        println("VERIFICATION - build-output/app-debug.apk: exists=${buildOutputApk.exists()}, size=${if(buildOutputApk.exists()) buildOutputApk.length() else 0}")
+        println("VERIFICATION - app/build/outputs/.../app-debug.apk: exists=${appBuildFile.exists()}, size=${if(appBuildFile.exists()) appBuildFile.length() else 0}")
+    }
+}
+
+
+
 
 
