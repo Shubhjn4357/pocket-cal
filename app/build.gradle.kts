@@ -120,20 +120,26 @@ dependencies {
   "ksp"(libs.moshi.kotlin.codegen)
 }
 
+val copyToAssets = tasks.register<Copy>("copyToAssets") {
+    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
+    into(rootProject.file("assets"))
+    rename { "pocket-cal.apk" }
+}
+
+val copyToBuildOutput = tasks.register<Copy>("copyToBuildOutput") {
+    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
+    into(rootProject.file("build-output"))
+    rename { "app-debug.apk" }
+}
+
+val copyToBuildOutputs = tasks.register<Copy>("copyToBuildOutputs") {
+    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
+    into(rootProject.file(".build-outputs"))
+    rename { "app-debug.apk" }
+}
+
 afterEvaluate {
-    tasks.findByName("assembleDebug")?.apply {
-        val srcFile = File(layout.buildDirectory.get().asFile, "outputs/apk/debug/app-debug.apk")
-        val dstFile = File(rootDir, "assets/pocket-cal.apk")
-        doLast {
-            if (srcFile.exists() && srcFile.isFile) {
-                dstFile.parentFile.mkdirs()
-                srcFile.copyTo(dstFile, overwrite = true)
-                logger.lifecycle("[DEPLOY] Successfully copied completed debug APK (${srcFile.length()} bytes) to assets/pocket-cal.apk")
-            } else {
-                logger.warn("[DEPLOY] Warning: Compiled debug APK not found at: ${srcFile.absolutePath}")
-            }
-        }
-    }
+    tasks.findByName("assembleDebug")?.finalizedBy(copyToAssets, copyToBuildOutput, copyToBuildOutputs)
 }
 
 
