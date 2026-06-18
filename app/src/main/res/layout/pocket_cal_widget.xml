@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121214"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/widget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/widget_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="PocketCal"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today"
+            android:textColor="#8E8E93"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/widget_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#2C2C2E"
+        android:layout_below="@id/widget_header"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp" />
+
+    <TextView
+        android:id="@+id/widget_task_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No tasks scheduled today"
+        android:textColor="#8E8E93"
+        android:textSize="14sp"
+        android:layout_below="@id/widget_separator"
+        android:layout_alignParentLeft="true" />
+
+    <LinearLayout
+        android:id="@+id/widget_next_task_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/widget_task_status"
+        android:layout_marginTop="8dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/widget_next_task_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Next Task"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_next_task_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10:00 AM"
+            android:textColor="#D1D1D6"
+            android:textSize="11sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+</RelativeLayout>

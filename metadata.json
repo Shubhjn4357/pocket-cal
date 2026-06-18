@@ -1,0 +1,6 @@
+{
+  "name": "Pocket Cal",
+  "description": "Intelligent Minimalist Schedule & Agenda App with natural language parsing, daily sliding ribbon, and chronological checklist cards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

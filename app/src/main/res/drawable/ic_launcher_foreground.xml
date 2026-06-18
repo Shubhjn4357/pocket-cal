@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Outer Elegant Ring representing time wheel / cycle -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:pathData="M54,28 A26,26 0 1,1 54,80 A26,26 0 1,1 54,28 Z" />
+        
+    <!-- Vertical Grid Segments of calendar matrix -->
+    <path
+        android:strokeColor="#8E8E93"
+        android:strokeWidth="1.5"
+        android:pathData="M46,29 L46,79 M62,29 L62,79" />
+        
+    <!-- Horizontal Grid Segments of calendar matrix -->
+    <path
+        android:strokeColor="#8E8E93"
+        android:strokeWidth="1.5"
+        android:pathData="M29,46 L79,46 M29,62 L79,62" />
+
+    <!-- Focal Active Selected Dot on grid intersection representing scheduled task -->
+    <path
+        android:fillColor="#F5F5F7"
+        android:pathData="M66,62 a4,4 0 1,1 -8,0 a4,4 0 1,1 8,0" />
+</vector>
