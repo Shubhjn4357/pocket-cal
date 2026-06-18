@@ -120,15 +120,20 @@ dependencies {
   "ksp"(libs.moshi.kotlin.codegen)
 }
 
-tasks.register<Copy>("copyApkToAssets") {
-    dependsOn("assembleDebug")
-    from(layout.buildDirectory.file("outputs/apk/debug/app-debug.apk"))
-    into(rootProject.file("assets"))
-    rename { "pocket-cal.apk" }
-}
-
 afterEvaluate {
-    tasks.findByName("assembleDebug")?.finalizedBy("copyApkToAssets")
+    tasks.findByName("assembleDebug")?.apply {
+        val srcFile = File(layout.buildDirectory.get().asFile, "outputs/apk/debug/app-debug.apk")
+        val dstFile = File(rootDir, "assets/pocket-cal.apk")
+        doLast {
+            if (srcFile.exists() && srcFile.isFile) {
+                dstFile.parentFile.mkdirs()
+                srcFile.copyTo(dstFile, overwrite = true)
+                logger.lifecycle("[DEPLOY] Successfully copied completed debug APK (${srcFile.length()} bytes) to assets/pocket-cal.apk")
+            } else {
+                logger.warn("[DEPLOY] Warning: Compiled debug APK not found at: ${srcFile.absolutePath}")
+            }
+        }
+    }
 }
 
 

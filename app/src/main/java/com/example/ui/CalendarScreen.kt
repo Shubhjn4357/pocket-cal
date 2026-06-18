@@ -458,6 +458,21 @@ fun HeaderArea(
     onOpenProfileSettings: () -> Unit
 ) {
     val monthYearTitle = viewModel.getFormattedHeadingDate(selectedDate)
+    val userName by viewModel.userName.collectAsState()
+
+    val initials = remember(userName) {
+        val trimmed = userName.trim()
+        if (trimmed.isEmpty()) {
+            "PC"
+        } else {
+            val words = trimmed.split(Regex("\\s+"))
+            if (words.size >= 2) {
+                "${words[0].first().uppercase()}${words[1].first().uppercase()}"
+            } else {
+                trimmed.take(2).uppercase()
+            }
+        }
+    }
 
     Row(
         modifier = Modifier
@@ -470,7 +485,41 @@ fun HeaderArea(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
-            BrandingLogo(isDarkTheme)
+            // Interactive Profile Icon (Initials badge with gradient background) acting as the trigger
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(CircleShape)
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = if (isDarkTheme) {
+                                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.tertiary)
+                            } else {
+                                listOf(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary)
+                            }
+                        )
+                    )
+                    .clickable {
+                        viewModel.triggerHapticClick()
+                        onOpenProfileSettings()
+                    }
+                    .border(
+                        width = 1.5.dp,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.15f),
+                        shape = CircleShape
+                    )
+                    .testTag("profile_header_icon"),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = initials,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 14.sp
+                    )
+                )
+            }
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
@@ -515,33 +564,6 @@ fun HeaderArea(
                     imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
                     contentDescription = "Toggle Theme style",
                     tint = if (isDarkTheme) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
-
-            // Circular Settings / Profile Button
-            IconButton(
-                onClick = {
-                    viewModel.triggerHapticClick()
-                    onOpenProfileSettings()
-                },
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(
-                        color = if (isDarkTheme) CosmicDarkSurface else TwilightLightSurface,
-                        shape = CircleShape
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = if (isDarkTheme) Color.White.copy(alpha = 0.1f) else Color.Black.copy(alpha = 0.05f),
-                        shape = CircleShape
-                    )
-                    .testTag("settings_button")
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Open Profile Settings",
-                    tint = if (isDarkTheme) CosmicDarkText else TwilightLightText,
                     modifier = Modifier.size(22.dp)
                 )
             }
